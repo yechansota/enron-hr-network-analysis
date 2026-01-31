@@ -1,0 +1,19 @@
+# data (do not commit)
+data/
+*.csv
+
+# outputs
+outputs/
+figures/
+*.png
+*.pdf
+
+# python
+__pycache__/
+*.pyc
+.env
+.venv
+
+# editors
+.vscode/
+.idea/
