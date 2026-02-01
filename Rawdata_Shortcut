@@ -1,0 +1,37 @@
+DATA.md
+# Data Description & Source
+## Dataset Overview
+This project uses the **Enron Email Dataset**, a large-scale corpus of internal corporate email communications that has been widely used in research on organizational networks, social network analysis, and machine learning.
+- **Approximate size**: ~500,000 email messages  
+- **Users**: ~150 Enron employees (primarily senior management)  
+- **Data type**: Raw email text (headers + body)
+
+---
+## Data Source
+The raw data used in this project was obtained from the Kaggle distribution of the Enron email corpus:
+- **Kaggle dataset**: *The Enron Email Dataset*  
+- **Uploader**: William Cukierski  
+- **URL**: https://www.kaggle.com/datasets/wcukierski/enron-email-dataset
+The Enron email corpus was originally made public during the **U.S. Federal Energy Regulatory Commission (FERC)** investigation into Enron Corporation and later prepared for research use through initiatives such as the **CALO Project**.
+- Original reference: https://www.cs.cmu.edu/~enron/
+
+---
+## Data Usage in This Project
+The dataset is used as **raw communication logs** to construct a directed, weighted email communication network.
+Key preprocessing steps include:
+- Removal of system-generated emails (e.g., auto-replies, newsletters, calendar notifications)
+- Filtering of extremely short messages to reduce low-signal interactions
+- Extraction of reply-based response times using sender–receiver matching
+- Aggregation of emails into network edges weighted by communication frequency
+
+No external labels (e.g., performance ratings, job titles, or organizational hierarchy) are used in the analysis.
+
+---
+## Data Availability & Reproducibility
+> ⚠️ **Raw data files are not included in this repository.**
+Due to dataset size and Kaggle’s terms of use, the raw email data is **not committed** to this GitHub repository.
+To reproduce the analysis:
+1. Download the dataset directly from Kaggle:
+   https://www.kaggle.com/datasets/wcukierski/enron-email-dataset
+2. Unzip the dataset locally
+3. Place the main CSV file at:
