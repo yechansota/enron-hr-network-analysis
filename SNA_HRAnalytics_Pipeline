@@ -1,0 +1,26 @@
+"""
+================================================================================
+HR Analytics | Network-Based Bottleneck Diagnostics & Simulation
+================================================================================
+
+Author: Sean Kim
+Project: Enron Organizational Network Analysis (HR Analytics Perspective)
+
+Description:
+- Translates large-scale email communication data into organizational risk signals
+- Focuses on structural bottlenecks, workload concentration, and fragility
+- Avoids individual ranking; emphasizes system-level diagnostics
+- Validates findings via simulation (stress tests)
+
+Pipeline:
+1. ETL + Noise Reduction + Reply-based Response Time
+2. Directed, Weighted Network Construction
+3. Macro Diagnostics (Communities, Openness, Sluggishness)
+4. Macro Simulation (Fragmentation Impact)
+5. Micro Role Signals (Load Absorbers, Connectors)
+6. Micro Simulation (Key Operator Stress Test)
+7. HR-Readable Interpretation & Actions
+
+Note:
+- Network metrics are diagnostic indicators, not evidence of intent or misconduct.
+===================================================
