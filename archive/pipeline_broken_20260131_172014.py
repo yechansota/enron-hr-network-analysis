@@ -316,11 +316,77 @@ def visualize_top10(cluster_df: pd.DataFrame):
     plt.xlabel("Openness (E–I Index)")
     plt.ylabel("Avg Response Time (hours)")
     plt.title("Top10 Organizational Dynamics Map")
+    plt.grid(True, linestyle="--", alpha=0.6)
+    plt.show()
+
+
+def run_micro_simulation(G: nx.DiGraph, dept_id: str, members: list, user_stats: dict, top_k: int = 5):
+    if not members:
+        return
+
+    sorted_by_load = sorted(members, key=lambda x: user_stats[x]["in_degree_count"], reverse=True)[:top_k]
+
+    orig_lcc = len(max(nx.weakly_connected_components(G), key=len))
+
+    G_load = G.copy()
+    G_load.remove_nodes_from(sorted_by_load)
+    new_lcc_load = len(max(nx.weakly_connected_components(G_load), key=len))
+    loss_load = (orig_lcc - new_lcc_load) / orig_lcc * 100
+
+    btw_subset = nx.betweenness_centrality_subset(G, sources=members, targets=list(G.nodes()), normalized=True)
+    sorted_by_conn = sorted(members, key=lambda x: btw_subset.get(x, 0), reverse=True)[:top_k]
+
+    G_conn = G.copy()
+    G_conn.remove_nodes_from(sorted_by_conn)
+    new_lcc_conn = len(max(nx.weakly_connected_components(G_conn), key=len))
+    loss_conn = (orig_lcc - new_lcc_conn) / orig_lcc * 100
+
+    print(f"\n[Micro Simulation] {dept_id} (Removing Top {top_k})")
+    print(f"   - Remove Load Absorbers: LCC Loss = {loss_load:.2f}%")
+    print(f"   - Remove Connectors:     LCC Loss = {loss_conn:.2f}%")
+    if loss_load > 0:
+        multiplier = loss_conn / loss_load
+        print(f"   => Connector Impact is {multiplier:.1f}x greater than Volume Impact")
+
+
+def visualize_dept_micro(indiv_df: pd.DataFrame, dept_id: str, typology: str):
+    dept_df = indiv_df[indiv_df["Dept_ID"] == dept_id].copy()
+
+    if dept_df.empty:
+        print(f"No members found for {dept_id}")
+        return
+
+    plt.figure(figsize=(10, 7))
+
+    x = dept_df["Received_Count"]
+    y = dept_df["Betweenness"]
+
+    sc = plt.scatter(
+        x, y,
+        c=dept_df["Avg_Response_H"],
+        cmap="coolwarm_r",
+        s=100,
+        edgecolors="k",
+        alpha=0.8
+    )
+
+    plt.colorbar(sc, label="Avg Response Time (Hours)")
+    plt.title(f"Micro View: {dept_id} ({typology})", fontsize=14)
+    plt.xlabel("Workload Volume (In-Degree)", fontsize=12)
+    plt.ylabel("Structural Influence (Betweenness)", fontsize=12)
+    plt.grid(True, linestyle="--", alpha=0.5)
+
+    top_connectors = dept_df.nlargest(3, "Betweenness")
+    for idx, row in top_connectors.iterrows():
+        plt.text(row["Received_Count"], row["Betweenness"],
+                 idx.split("@")[0], fontsize=9, fontweight='bold', ha='right')
+
+    plt.tight_layout()
     plt.show()
 
 
 if __name__ == "__main__":
-    file_path = "data/emails.csv"
+    file_path = "/Users/sean/Downloads/emails.csv"
     TOP_N = 10
 
     G, user_stats, temporal_data, kept = process_data_pipeline(file_path)
@@ -328,6 +394,22 @@ if __name__ == "__main__":
         sys.exit(0)
 
     cluster_df, dept_members, user_dept_map, Q = detect_communities_and_macro_table(G, user_stats, TOP_N)
+
     indiv_df = build_individual_table(G, user_stats, user_dept_map)
     indiv_df = add_betweenness_for_micro(indiv_df, G)
+
+    print("\n[Visualizing Macro View...]")
     visualize_top10(cluster_df)
+
+    if not cluster_df.empty:
+        target_dept = cluster_df.iloc[0]
+        dept_id = target_dept["Dept_ID"]
+        typology = target_dept["Typology"]
+
+        print(f"\n[Drill Down Analysis] Target: {dept_id} ({typology})")
+
+        members = dept_members[dept_id]
+        run_micro_simulation(G, dept_id, members, user_stats, top_k=10)
+
+        print(f"Visualizing Micro View for {dept_id}...")
+        visualize_dept_micro(indiv_df, dept_id, typology)
