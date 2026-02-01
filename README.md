@@ -1,6 +1,6 @@
 # Social Network Analysis Application in HR Analytics
 
-![Header Image](https://github.com/user-attachments/assets/4df2225f-d57c-44a1-a2f3-949a2809bf20)
+![Image](https://github.com/user-attachments/assets/8a97e252-641f-4d0e-9c1e-ca0cefa2e4a5)
 
 ## Project Background
 This HR project starts from my first assignment for the social network analysis utilizing node-edge structures in the **6303 course**. To further understand and develop my analytical skills, I found a big data set from an open source—the **Enron data set**—which contains over 0.5 million emails.
@@ -34,7 +34,7 @@ Together, these indicators are used to address a core HR question:
 ***Which parts of the organization quietly hold everything together, and which parts introduce risk by being too closed, too slow, or too overloaded?***
 
 ## Organizational Network Diagnostics (Macro View)
-<img width="1200" height="800" alt="Image" src="https://github.com/user-attachments/assets/100867c9-719a-47dc-b3cf-837b323dbb71" />
+<img width="1200" height="800" alt="Image" src="https://github.com/user-attachments/assets/528211d4-d075-473b-9dc8-c4f7be48dff6" />
 At the macro level, the analysis suggests that Enron’s communication network relied heavily on a small number of very large organizational units that exhibited both inward-facing communication patterns and slow response times.
 
 * **The "Black Hole" Risk**: As seen in the chart, groups like **Richard Shapiro’s** and **Tana Jones’s** are massive but extremely closed (Low Openness). They act as bottlenecks with slow response times (50+ hours).
